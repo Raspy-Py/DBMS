@@ -17,11 +17,19 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebugInfo|Win32">
+      <Configuration>RelWithDebugInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebugInfo|x64">
+      <Configuration>RelWithDebugInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c6f4a99a-de86-4ee0-8a8c-3df814012960}</ProjectGuid>
+    <ProjectGuid>{46da637b-b7ec-47bb-88b8-9586ded2dd72}</ProjectGuid>
     <RootNamespace>DBMS</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -33,6 +41,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -52,6 +67,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -63,18 +85,28 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>bin\$(Configuration)\cache\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>bin\$(Configuration)\cache\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>bin\$(Configuration)\cache\</IntDir>
   </PropertyGroup>
@@ -82,12 +114,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_CONCPP;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Libs\mysqlcppconn\include;$(SolutionDir)external\include;$(SolutionDir)external\include\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Libs\mysqlcppconn\lib\vs14;C:\Libs\mysqlcppconn\lib;C:\Program Files %28x86%29\OpenSSL-Win32\lib;$(SolutionDir)external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;soil2-debug.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,29 +132,51 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_CONCPP;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Libs\mysqlcppconn\include;$(SolutionDir)external\include\imgui;$(SolutionDir)external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Libs\mysqlcppconn\lib\vs14;C:\Libs\mysqlcppconn\lib;C:\Program Files %28x86%29\OpenSSL-Win32\lib;$(SolutionDir)external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;soil2-debug.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>STATIC_CONCPP;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Libs\mysqlcppconn\include;$(SolutionDir)external\include\imgui;$(SolutionDir)external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Libs\mysqlcppconn\lib\vs14;C:\Libs\mysqlcppconn\lib;C:\Program Files %28x86%29\OpenSSL-Win32\lib;$(SolutionDir)external\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;soil2-debug.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>STATIC_CPPCON</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\MySQL\Connector C++ 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\MySQL\Connector C++ 8.0\lib64\vs14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mysqlcppconn-static.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -127,21 +185,112 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>STATIC_CPPCON;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\MySQL\Connector C++ 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\MySQL\Connector C++ 8.0\lib64\vs14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mysqlcppconn-static.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebugInfo|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\InputForm.cpp" />
+    <ClCompile Include="src\ContainerWindow.cpp" />
+    <ClCompile Include="src\Scema.cpp" />
+    <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="external\include\glad\glad.c" />
+    <ClCompile Include="external\include\imgui\imgui.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="external\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="external\include\SOIL2\image_DXT.c" />
+    <ClCompile Include="external\include\SOIL2\image_helper.c" />
+    <ClCompile Include="external\include\SOIL2\SOIL2.c" />
+    <ClCompile Include="external\include\SOIL2\wfETC.c" />
+    <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\Clock.cpp" />
+    <ClCompile Include="src\DBMS.cpp" />
+    <ClCompile Include="src\Exception.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\TableInfo.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
+    <ClCompile Include="src\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\InputForm.h" />
+    <ClInclude Include="src\ContainerWindow.h" />
+    <ClInclude Include="src\Scema.h" />
+    <ClInclude Include="src\Console.h" />
+    <ClInclude Include="external\include\glad\glad.h" />
+    <ClInclude Include="external\include\GLFW\glfw3.h" />
+    <ClInclude Include="external\include\GLFW\glfw3native.h" />
+    <ClInclude Include="external\include\GL\eglew.h" />
+    <ClInclude Include="external\include\GL\glew.h" />
+    <ClInclude Include="external\include\GL\glxew.h" />
+    <ClInclude Include="external\include\GL\wglew.h" />
+    <ClInclude Include="external\include\imgui\imconfig.h" />
+    <ClInclude Include="external\include\imgui\imgui.h" />
+    <ClInclude Include="external\include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="external\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="external\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="external\include\imgui\imgui_internal.h" />
+    <ClInclude Include="external\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="external\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="external\include\imgui\imstb_truetype.h" />
+    <ClInclude Include="external\include\KHR\khrplatform.h" />
+    <ClInclude Include="external\include\SOIL2\image_DXT.h" />
+    <ClInclude Include="external\include\SOIL2\image_helper.h" />
+    <ClInclude Include="external\include\SOIL2\jo_jpeg.h" />
+    <ClInclude Include="external\include\SOIL2\pkm_helper.h" />
+    <ClInclude Include="external\include\SOIL2\pvr_helper.h" />
+    <ClInclude Include="external\include\SOIL2\SOIL2.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_DDS.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_DDS_c.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_ext.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_ext_c.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_pkm.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_pkm_c.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_pvr.h" />
+    <ClInclude Include="external\include\SOIL2\stbi_pvr_c.h" />
+    <ClInclude Include="external\include\SOIL2\stb_image.h" />
+    <ClInclude Include="external\include\SOIL2\stb_image_write.h" />
+    <ClInclude Include="external\include\SOIL2\wfETC.h" />
+    <ClInclude Include="external\include\stb_image\stb_image.h" />
+    <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\Clock.h" />
+    <ClInclude Include="src\Exception.h" />
+    <ClInclude Include="src\Menu.h" />
+    <ClInclude Include="src\SafeWindows.h" />
+    <ClInclude Include="src\TableInfo.h" />
+    <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="external\lib\glew32.lib" />
+    <Library Include="external\lib\glfw3.lib" />
+    <Library Include="external\lib\soil2-debug.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
