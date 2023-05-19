@@ -26,10 +26,12 @@ public:
 		void Log(const std::string& line)
 		{
 			p_Console->AddLog(line);
+			InfoLog(line.c_str());
 		}
 		void ErrorLog(const std::string& line)
 		{
 			p_Console->AddLog(line, TextColor_Red);
+			Error(line.c_str());
 		}
 		void CommandLog(const std::string& line)
 		{

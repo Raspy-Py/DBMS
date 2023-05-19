@@ -22,6 +22,7 @@ public:
 	void Delete(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values);
 	void Find(	const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& sourceValues, 
 				std::vector<std::pair<std::string, std::string>>& destValues);
+	void Select(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values);
 
 private:
 	std::unique_ptr<sql::mysql::MySQL_Driver> m_Driver;

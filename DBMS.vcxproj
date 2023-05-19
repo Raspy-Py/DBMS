@@ -213,6 +213,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="external\include\loguru\loguru.cpp" />
     <ClCompile Include="src\InputForm.cpp" />
     <ClCompile Include="src\ContainerWindow.cpp" />
     <ClCompile Include="src\Scema.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\include\loguru\loguru.hpp" />
     <ClInclude Include="src\InputForm.h" />
     <ClInclude Include="src\ContainerWindow.h" />
     <ClInclude Include="src\Scema.h" />

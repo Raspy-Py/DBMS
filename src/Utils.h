@@ -1,13 +1,26 @@
 #pragma once
 #include "imgui/imgui.h"
+#include "loguru/loguru.hpp"
 
 #include <string>
 #include <chrono>
 
-#define AS_PREFIX(label) utils::LabelPrefix(label).c_str()
-#define AS_PREFIX_C(label) utils::LabelPrefix(label)
-#define FORMAT(fmt, ...) utils::FormatText(fmt, __VA_ARGS__)
-#define TIME_STAMP() utils::GetCurrentTime().c_str()
+#define AS_PREFIX(label)	utils::LabelPrefix(label).c_str()
+#define AS_PREFIX_C(label)	utils::LabelPrefix(label)
+#define FORMAT(fmt, ...)	utils::FormatText(fmt, __VA_ARGS__)
+#define TIME_STAMP()		utils::GetCurrentTime().c_str()
+
+#define ENABLE_FILE_LOGGING 1
+
+#if ENABLE_FILE_LOGGING
+	#define InfoLog(...)	LOG_F(INFO, __VA_ARGS__)
+	#define Warning(...)	LOG_F(WARNING, __VA_ARGS__)
+	#define Error(...)		LOG_F(ERROR, __VA_ARGS__)						
+#else
+	#define InfoLog(...)
+	#define Warning(...)
+	#define Error(...)		
+#endif
 
 enum TextColor_
 {
@@ -28,6 +41,9 @@ const std::vector<ImVec4> Colors = {
 
 namespace utils
 {
+	// Init loguru
+	void LogsInit();
+
 	// Adding label text to widget as a prefix
 	std::string LabelPrefix(const char* label);
 

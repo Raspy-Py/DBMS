@@ -6,7 +6,8 @@
 std::vector<std::string> InputForm::types = {
     "Insert",
     "Delete",
-    "Update"
+    "Update",
+    "Select"
 };
 
 InputForm::InputForm(const std::string& type, const TableInfo& tableInfo, Scema* pScema, Console::InputStream* pLogStream, Values** ppValues)
@@ -75,7 +76,7 @@ void InputForm::Render()
     // Render the centered button
     float availableWidth = ImGui::GetContentRegionAvail().x;
     float buttonWidth = 100.0f;
-    float buttonX1 = (availableWidth - (m_Type != "Insert" ? buttonWidth * 2.0f + 10.0f : buttonWidth)) * 0.5f;
+    float buttonX1 = (availableWidth - ( (m_Type != "Insert" && m_Type != "Select") ? buttonWidth * 2.0f + 10.0f : buttonWidth)) * 0.5f;
     float buttonX2 = availableWidth * 0.5f + 5.0f;
     ImGui::SetCursorPosX(buttonX1);
     if (ImGui::Button(m_Type.c_str(), ImVec2(buttonWidth, 0)))
@@ -83,9 +84,10 @@ void InputForm::Render()
         if (m_Type == "Insert") p_Scema->Insert(m_TableName, *m_Values);
         else if (m_Type == "Update") p_Scema->Update(m_TableName, *m_Values, *m_NewValues);
         else if (m_Type == "Delete") p_Scema->Delete(m_TableName, *m_Values);
+        else if (m_Type == "Select") p_Scema->Select(m_TableName, *m_Values);
     }
 
-    if (m_Type == "Insert")
+    if (m_Type == "Insert" || m_Type == "Select")
         return;
 
     ImGui::SameLine();

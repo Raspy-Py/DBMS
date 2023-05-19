@@ -72,8 +72,7 @@ void Scema::Insert(const std::string& tableName, const std::vector<std::pair<std
     query += ")";
 
     sql::Statement* statement = m_Connection->createStatement();
-    std::string timeStamp = FORMAT("[%s]", TIME_STAMP());
-    p_LogStream->CommandLog(FORMAT("%20s: %s", timeStamp.c_str(), query.c_str()));
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
     try
     {
         statement->execute(query);
@@ -117,8 +116,7 @@ void Scema::Update(const std::string& tableName, const std::vector<std::pair<std
     }
 
     sql::Statement* statement = m_Connection->createStatement();
-    std::string timeStamp = FORMAT("[%s]", TIME_STAMP());
-   p_LogStream->CommandLog(FORMAT("%20s: %s", timeStamp.c_str(), query.c_str()));
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
     try
     {
         statement->execute(query);
@@ -148,8 +146,7 @@ void Scema::Delete(const std::string& tableName, const std::vector<std::pair<std
     }
 
     sql::Statement* statement = m_Connection->createStatement();
-    std::string timeStamp = FORMAT("[%s]", TIME_STAMP());
-   p_LogStream->CommandLog(FORMAT("%20s: %s", timeStamp.c_str(), query.c_str()));
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
     try
     {
         statement->execute(query);
@@ -184,8 +181,7 @@ void Scema::Find(const std::string& tableName, const std::vector<std::pair<std::
     // Execute the SELECT query
     sql::Statement* statement = m_Connection->createStatement();
     sql::ResultSet* resultSet;
-    std::string timeStamp = FORMAT("[%s]", TIME_STAMP());
-    p_LogStream->CommandLog(FORMAT("%20s: %s", timeStamp.c_str(), query.c_str()));
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
     try
     {
         resultSet = statement->executeQuery(query);
@@ -207,5 +203,97 @@ void Scema::Find(const std::string& tableName, const std::vector<std::pair<std::
     catch (const sql::SQLException& e)
     {
         p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
+    }
+}
+
+void Scema::Select(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values)
+{
+    size_t keyCounter = 0;
+    std::string query = "SELECT * FROM `" + tableName + "` WHERE ";
+    for (size_t i = 0; i < values.size(); ++i)
+    {
+        if (values[i].second == "") continue;
+        if (keyCounter > 0)
+        {
+            query += " AND ";
+        }
+        keyCounter++;
+        query += values[i].first + "='" + values[i].second + "'";
+    }
+
+    if (keyCounter <= 0)
+    {
+        query = "SELECT * FROM `" + tableName + "`";
+    }
+
+    // Execute the SELECT query
+    sql::Statement* statement = m_Connection->createStatement();
+    sql::ResultSet* resultSet;
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
+
+    try
+    {
+        resultSet = statement->executeQuery(query);
+        const auto& reflection = GetTableInfo(tableName).GetColumns();
+        int columnCount = resultSet->getMetaData()->getColumnCount();
+
+        if (!resultSet->next())
+        {
+            p_LogStream->Log(FORMAT("%20s: %s", "", "No rows found."));
+            return;
+        }
+        std::string header;
+        for (size_t i = 0; i < columnCount; i++)
+        {
+            std::string entry = reflection[i].name;
+            if (entry.size() > 15)
+            {
+                entry = entry.substr(0, 12) + "...";
+            }
+            else if (i == 0 && entry.size() > 3)
+            {
+                entry = entry.substr(0, 3);
+            }
+            if (i == 0)
+                header += FORMAT("| %3s |", entry.c_str());
+            else
+                header += FORMAT(" %15s |", entry.c_str());
+        }
+        p_LogStream->Log(FORMAT("%20s: %s", TIME_STAMP(), header.c_str()));
+
+        // Retrieve the row data
+        do
+        {
+            std::string row;
+            for (size_t i = 1; i <= columnCount; i++)
+            {
+                std::string entry = resultSet->getString(i);
+                if (entry.size() > 15)
+                {
+                    entry = entry.substr(0, 12) + "...";
+                }
+                else if (i == 1 && entry.size() > 3)
+                {
+                    entry = entry.substr(0, 3);
+                }
+                if (i == 1)
+                    row += FORMAT("| %3s |", entry.c_str());
+                else
+                    row += FORMAT(" %15s |", entry.c_str());
+            }
+            p_LogStream->Log(FORMAT("%20s: %s", TIME_STAMP(), row.c_str()));
+        } while (resultSet->next());
+    }
+    catch (const sql::SQLException& e)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
+    }
+    catch (const std::exception& e)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s: %s", "Standart error", e.what()));
+    }
+    catch (...)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s:", "Unknown error"));
     }
 }

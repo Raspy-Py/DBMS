@@ -2,6 +2,20 @@
 
 namespace utils
 {
+	void LogsInit()
+	{
+		loguru::g_preamble_date = false;
+		loguru::g_preamble_time = true;
+		loguru::g_preamble_uptime = false;
+		loguru::g_preamble_thread = false;
+		loguru::g_preamble_file = true;
+		loguru::g_preamble_verbose = true;
+		loguru::g_preamble_pipe = true;
+		loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
+
+		loguru::add_file("./logs/latest_readable.log", loguru::Truncate, loguru::Verbosity_INFO);
+	}
+
 	std::string LabelPrefix(const char* label)
 	{
 		ImGui::Text(label);
@@ -34,7 +48,7 @@ namespace utils
 
 		std::tm* timeinfo = std::localtime(&currentTime);
 		std::stringstream ss;
-		ss << std::put_time(timeinfo, "%H:%M:%S");
+		ss << "[" << std::put_time(timeinfo, "%H:%M:%S") << "]";
 
 		return ss.str();
 	}
