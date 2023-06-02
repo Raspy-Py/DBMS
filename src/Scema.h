@@ -23,6 +23,7 @@ public:
 	void Find(	const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& sourceValues, 
 				std::vector<std::pair<std::string, std::string>>& destValues);
 	void Select(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values);
+	void Direct(const std::string& query);
 
 private:
 	std::unique_ptr<sql::mysql::MySQL_Driver> m_Driver;

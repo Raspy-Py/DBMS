@@ -51,6 +51,7 @@ void Scema::Insert(const std::string& tableName, const std::vector<std::pair<std
     size_t keyCounter = 0;
     for (size_t i = 0; i < values.size(); ++i) 
     {
+        if (values.at(i).second == "") continue;
         if (keyCounter >  0)
         {
             query += ", ";
@@ -62,6 +63,7 @@ void Scema::Insert(const std::string& tableName, const std::vector<std::pair<std
     keyCounter = 0;
     for (size_t i = 0; i < values.size(); ++i) 
     {
+        if (values.at(i).second == "") continue;
         if (keyCounter > 0) 
         {
             query += ", ";
@@ -86,6 +88,8 @@ void Scema::Insert(const std::string& tableName, const std::vector<std::pair<std
     {
         p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
     }
+
+    p_LogStream->ScrollDown();
 }
 
 void Scema::Update(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& oldValues, 
@@ -129,6 +133,7 @@ void Scema::Update(const std::string& tableName, const std::vector<std::pair<std
     {
         p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
     }
+    p_LogStream->ScrollDown();
 }
 
 void Scema::Delete(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values)
@@ -137,6 +142,7 @@ void Scema::Delete(const std::string& tableName, const std::vector<std::pair<std
     size_t keyCounter = 0;
     for (size_t i = 0; i < values.size(); ++i) 
     {
+        if (values[i].second == "") continue;
         if (keyCounter >  0)
         {
             query += " AND ";
@@ -160,6 +166,7 @@ void Scema::Delete(const std::string& tableName, const std::vector<std::pair<std
     {
         p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
     }
+    p_LogStream->ScrollDown();
 }
 
 void Scema::Find(const std::string& tableName, const std::vector<std::pair<std::string, 
@@ -204,6 +211,7 @@ void Scema::Find(const std::string& tableName, const std::vector<std::pair<std::
     {
         p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
     }
+    p_LogStream->ScrollDown();
 }
 
 void Scema::Select(const std::string& tableName, const std::vector<std::pair<std::string, std::string>>& values)
@@ -255,7 +263,7 @@ void Scema::Select(const std::string& tableName, const std::vector<std::pair<std
                 entry = entry.substr(0, 3);
             }
             if (i == 0)
-                header += FORMAT("| %3s |", entry.c_str());
+                header += FORMAT("| %15s |", entry.c_str());
             else
                 header += FORMAT(" %15s |", entry.c_str());
         }
@@ -277,7 +285,7 @@ void Scema::Select(const std::string& tableName, const std::vector<std::pair<std
                     entry = entry.substr(0, 3);
                 }
                 if (i == 1)
-                    row += FORMAT("| %3s |", entry.c_str());
+                    row += FORMAT("| %15s |", entry.c_str());
                 else
                     row += FORMAT(" %15s |", entry.c_str());
             }
@@ -296,4 +304,53 @@ void Scema::Select(const std::string& tableName, const std::vector<std::pair<std
     {
         p_LogStream->ErrorLog(FORMAT("%20s:", "Unknown error"));
     }
+    p_LogStream->ScrollDown();
+}
+
+void Scema::Direct(const std::string& query)
+{
+    // Execute the SELECT query
+    sql::Statement* statement = m_Connection->createStatement();
+    sql::ResultSet* resultSet;
+    p_LogStream->CommandLog(FORMAT("%20s: %s", TIME_STAMP(), query.c_str()));
+
+    try
+    {
+        resultSet = statement->executeQuery(query);
+        int columnCount = resultSet->getMetaData()->getColumnCount();
+
+        if (!resultSet->next())
+        {
+            p_LogStream->Log(FORMAT("%20s: %s", "", "No rows found."));
+            return;
+        }
+
+        // Retrieve the row data
+        do
+        {
+            std::string row;
+            for (size_t i = 1; i <= columnCount; i++)
+            {
+                std::string entry = resultSet->getString(i);
+                if (i == 1)
+                    row += FORMAT(" %15s ", entry.c_str());
+                else
+                    row += FORMAT(" %15s ", entry.c_str());
+            }
+            p_LogStream->Log(FORMAT(row.c_str()));
+        } while (resultSet->next());
+    }
+    catch (const sql::SQLException& e)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s: %s", "SQL error", e.what()));
+    }
+    catch (const std::exception& e)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s: %s", "Standart error", e.what()));
+    }
+    catch (...)
+    {
+        p_LogStream->ErrorLog(FORMAT("%20s:", "Unknown error"));
+    }
+    p_LogStream->ScrollDown();
 }

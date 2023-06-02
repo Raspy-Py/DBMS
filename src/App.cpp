@@ -44,7 +44,7 @@ App::App()
 
     // Connecting to MySQL database
     m_Scema = std::make_unique<Scema>("soccer_cup", m_LogStream.get());
-   // m_Scema = std::make_unique<Scema>("sys", m_LogStream.get());
+    //m_Scema = std::make_unique<Scema>("sys", m_LogStream.get());
     m_Tables = m_Scema->EnumerateTables();
     m_SelectedTable =  m_Tables.at(0);
     m_SelectedOperation = m_SupportedOperation.at(0);

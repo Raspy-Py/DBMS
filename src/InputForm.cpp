@@ -7,8 +7,13 @@ std::vector<std::string> InputForm::types = {
     "Insert",
     "Delete",
     "Update",
-    "Select"
+    "Select",
+    "Direct"
 };
+
+
+char InputForm::s_InputBuffer[InputForm::c_BufferSize] = "";
+std::string InputForm::m_DirectQuery = InputForm::s_InputBuffer;
 
 InputForm::InputForm(const std::string& type, const TableInfo& tableInfo, Scema* pScema, Console::InputStream* pLogStream, Values** ppValues)
     :
@@ -43,6 +48,19 @@ InputForm::InputForm(const std::string& type, const TableInfo& tableInfo, Scema*
 
 void InputForm::Render()
 {
+    if (m_Type == "Direct")
+    {
+        strcpy(s_InputBuffer, m_DirectQuery.c_str());
+
+        // Render the input text widget
+        if (ImGui::InputText(AS_PREFIX(FORMAT("%20s", "Query").c_str()), s_InputBuffer, c_BufferSize,
+            ImGuiInputTextFlags_CallbackAlways, InputForm::PasteCallback))
+        {
+            // Update the string with the modified buffer
+            m_DirectQuery = s_InputBuffer;
+        }
+    }
+    else
     for (auto& [inputLabel, data] : *m_Values)
     {
         char buffer[c_BufferSize]{};
@@ -76,7 +94,7 @@ void InputForm::Render()
     // Render the centered button
     float availableWidth = ImGui::GetContentRegionAvail().x;
     float buttonWidth = 100.0f;
-    float buttonX1 = (availableWidth - ( (m_Type != "Insert" && m_Type != "Select") ? buttonWidth * 2.0f + 10.0f : buttonWidth)) * 0.5f;
+    float buttonX1 = (availableWidth - ( (m_Type != "Insert" && m_Type != "Select" && m_Type != "Direct") ? buttonWidth * 2.0f + 10.0f : buttonWidth)) * 0.5f;
     float buttonX2 = availableWidth * 0.5f + 5.0f;
     ImGui::SetCursorPosX(buttonX1);
     if (ImGui::Button(m_Type.c_str(), ImVec2(buttonWidth, 0)))
@@ -85,9 +103,10 @@ void InputForm::Render()
         else if (m_Type == "Update") p_Scema->Update(m_TableName, *m_Values, *m_NewValues);
         else if (m_Type == "Delete") p_Scema->Delete(m_TableName, *m_Values);
         else if (m_Type == "Select") p_Scema->Select(m_TableName, *m_Values);
+        else if (m_Type == "Direct") p_Scema->Direct(m_DirectQuery);
     }
 
-    if (m_Type == "Insert" || m_Type == "Select")
+    if (m_Type != "Delete" && m_Type != "Update")
         return;
 
     ImGui::SameLine();
